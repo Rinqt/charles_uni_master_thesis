@@ -1,0 +1,65 @@
+def precision(ground_truth, prediction):
+    """
+    Compute Precision metric
+    :param ground_truth: the ground truth set or sequence
+    :param prediction: the predicted set or sequence
+    :return: the value of the metric
+    """
+    ground_truth = remove_duplicates(ground_truth)
+    prediction = remove_duplicates(prediction)
+    precision_score = float(count_a_in_b_unique(prediction, ground_truth) / float(len(prediction)))
+    assert 0 <= precision_score <= 1
+    return precision_score
+
+
+def recall(ground_truth, prediction):
+    """
+    Compute Recall metric
+    :param ground_truth: the ground truth set or sequence
+    :param prediction: the predicted set or sequence
+    :return: the value of the metric
+    """
+    ground_truth = remove_duplicates(ground_truth)
+    prediction = remove_duplicates(prediction)
+    recall_score = float(count_a_in_b_unique(prediction, ground_truth) / float(len(ground_truth)))
+    assert 0 <= recall_score <= 1
+    return recall_score
+
+
+def mrr(ground_truth, prediction):
+    """
+    Compute Mean Reciprocal Rank metric. Reciprocal Rank is set 0 if no predicted item is in contained the ground truth.
+    :param ground_truth: the ground truth set or sequence
+    :param prediction: the predicted set or sequence
+    :return: the value of the metric
+    """
+    rr = 0.
+    for rank, item in enumerate(prediction):
+        if item in ground_truth:
+            rr = 1. / (rank + 1)
+            break
+    return rr
+
+
+def count_a_in_b_unique(pred, g_truth):
+    """
+    :param pred: list of lists
+    :param g_truth: list of lists
+    :return: number of elements of a in b
+    """
+    count = 0
+    for item in pred:
+        if item in g_truth:
+            count += 1
+    return count
+
+
+def remove_duplicates(given_list):
+    res = []
+
+    for item in given_list:
+        if item not in res:
+            res.append(item)
+
+    return res
+
