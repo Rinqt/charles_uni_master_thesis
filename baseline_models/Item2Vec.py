@@ -230,6 +230,13 @@ class Evaluator(object):
         return recommended_items_set[:10]
 
     def calculate_ndcg(self):
+        """
+            Calculate the nDCG Score of the recommendation
+            1. Create a binary list which has exactly same size with self.recommendation
+            2. Fill the array with zeros, except the location for the prediction. Put 1 for the prediction location
+            3. Iterate through the binary list and calculate the nDCG Score based of the prediction location
+                3.1 If ground truth is located later in the sequence mark the prediction trivial by setting self.is_trivial_prediction = true
+        """
         one_zero_list = []
         for pred in self.recommendation:
             if pred == self.real:
@@ -239,11 +246,6 @@ class Evaluator(object):
 
         pos = 1
         if 1 in one_zero_list:
-            if self.real in self.decoded_sequence[self.real_index + 1:]:
-                self.ndcg = -1
-                self.is_trivial_prediction = True
-                return self.ndcg
-
             dcg_score = 0
             for item in one_zero_list:
                 if item != 0:
@@ -251,6 +253,9 @@ class Evaluator(object):
                 pos += 1
 
             self.ndcg += dcg_score
+
+            if self.real in self.decoded_sequence[self.real_index + 1:]:
+                self.is_trivial_prediction = True
 
 train_item2vec()
 evaluate_model()
