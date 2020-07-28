@@ -145,7 +145,7 @@ def train_evaluate_models():
                               hyper_parameters=json.dumps(hyper_parameters),
                               meta_data=json.dumps(training_options))
 
-            is_data_ready = True if *lstm_model.k_split * 2) == fold_counter else False
+            is_data_ready = True if (lstm_model.k_split * 2) == fold_counter else False
             if not is_data_ready:
                 lstm_model.load_data()
                 lstm_model.create_common_folds_to_use()
