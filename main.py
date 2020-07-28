@@ -105,7 +105,7 @@ lstm_models = \
 # Define your training options below
 training_options = \
     {
-        '8_epoch_512_batch_test'  : {'test_fraction': 0.25, 'evaluation_fraction': 0.25, 'max_trials': 3, 'execution_per_trial': 3, 'epochs': 8, 'batch_size': 512, 'k_split': 4,
+        '8_epoch_512_batch'  : {'test_fraction': 0.25, 'evaluation_fraction': 0.25, 'max_trials': 3, 'execution_per_trial': 3, 'epochs': 8, 'batch_size': 512, 'k_split': 4,
                                 'random_state': 42},
     }
 
@@ -119,13 +119,17 @@ def train_evaluate_models():
 
             if 'model_03' in model_name:
                 hyper_parameters['objective_function'] = 'val_mean_absolute_error'
+                hyper_parameters['dense_activation'] = 'linear'
+                hyper_parameters['lstm_layer_activation'] = 'linear'
                 hyper_parameters['metric'] = 'mean_absolute_error'
                 hyper_parameters['loss'] = 'mean_absolute_error'
             else:
                 hyper_parameters['objective_function'] = 'val_accuracy'
-                hyper_parameters['dense_activation'] = 'tanh'
+                hyper_parameters['dense_activation'] = 'sigmoid'
+                hyper_parameters['lstm_layer_activation'] = 'relu'
                 hyper_parameters['metric'] = 'accuracy'
                 hyper_parameters['loss'] = 'categorical_crossentropy'
+
 
             processed_paths = create_path_information(model_alias=model_name, model_train_type=option_alias)
             lstm_model = model_class(model_alias=model_name,
@@ -140,11 +144,6 @@ def train_evaluate_models():
                               description=model_description,
                               hyper_parameters=json.dumps(hyper_parameters),
                               meta_data=json.dumps(training_options))
-
-            is_data_ready = True if (lstm_model.k_split * 2) == fold_counter else False
-            if not is_data_ready:
-                lstm_model.load_data()
-                lstm_model.create_common_folds_to_use()
 
             lstm_model.train_model()
             lstm_model.prepare_evaluation()
