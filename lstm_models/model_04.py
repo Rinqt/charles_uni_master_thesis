@@ -216,9 +216,9 @@ class LstmV4(BaseLSTM):
 
         :param is_evaluation: Boolean to determine if the given data is for the training or evaluation
         """
-        item2vec_sequences = np.full(len(self.user_sequence_list), fill_value=self.mask_value, dtype=object)
+        item2vec_sequences = np.full(len(self.all_targets), fill_value=self.mask_value, dtype=object)
 
-        for index, train_feature in enumerate(self.user_sequence_list):
+        for index, train_feature in enumerate(self.all_targets):
             items = np.full((len(train_feature), self.encoding_vector_size), fill_value=self.mask_value, dtype='float32')
             for idx, item in enumerate(train_feature):
                 i2v_representation = self.item2vec_model.wv.get_vector(str(item))
