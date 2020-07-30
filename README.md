@@ -161,4 +161,4 @@ The code is developed by using PyCharm with Anaconda. The configuration tutorial
 
    Note that each method is described with comment blocks and will used default values we set during the research. 
 
-For more details regarding the research navigate to docs/yos_master_thesis.pdf. To get more information about the source code, check the source code.
+For more details regarding the research navigate to docs folder. To get more information about the source code, check the source code.
